@@ -282,7 +282,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>32</integer>
+									<integer>33</integer>
 									<integer>31</integer>
 									<integer>0</integer>
 								</array>
@@ -323,7 +323,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>8827C7F21325367F00B27E1B</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>README.markdown</string>
+								<string>PathControllerTests.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -331,11 +331,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>8827C7F31325367F00B27E1B</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>README.markdown</string>
+										<string>PathControllerTests.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>8827CC3413258C4A00B27E1B</string>
+										<string>8827CC3B13258CAB00B27E1B</string>
 										<key>history</key>
 										<array>
 											<string>8827C8D71325590600B27E1B</string>
@@ -383,7 +383,6 @@
 											<string>8827CB0C13257FC800B27E1B</string>
 											<string>8827CB0D13257FC800B27E1B</string>
 											<string>8827CB0E13257FC800B27E1B</string>
-											<string>8827CB1213257FC800B27E1B</string>
 											<string>8827CB5C1325828500B27E1B</string>
 											<string>8827CB7E1325839400B27E1B</string>
 											<string>8827CB8B1325846D00B27E1B</string>
@@ -395,8 +394,9 @@
 											<string>8827CC2813258A1000B27E1B</string>
 											<string>8827CC2913258A1000B27E1B</string>
 											<string>8827CC2F13258BA400B27E1B</string>
-											<string>8827CC3213258C4A00B27E1B</string>
-											<string>8827CC3313258C4A00B27E1B</string>
+											<string>8827CC3513258C6600B27E1B</string>
+											<string>8827CC3613258C6600B27E1B</string>
+											<string>8827CC3713258C6600B27E1B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>

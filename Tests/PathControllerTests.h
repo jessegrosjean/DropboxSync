@@ -1,5 +1,5 @@
 //
-//  PathControllerGetTest.h
+//  PathControllerTests.h
 //  DropboxSync
 //
 //  Created by Jesse Grosjean on 8/15/10.
@@ -18,7 +18,7 @@
 #define DROPBOXTESTACCOUNT @""
 #define DROPBOXTESTACCOUNTPASSWORD @""
 
-// Text folder fixture path (copy from
+// Test folder fixture path (copy from PROJECT/Source/Tests/DropboxTestFolderFixture) and put in your dropbox folder.
 #define TEST_FOLDER_FIXTURE_DROPBOX_PATH @"/Testing/DropboxTestFolderFixture"
 
 @class PathController;
