@@ -282,9 +282,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>24</integer>
-									<integer>6</integer>
-									<integer>2</integer>
+									<integer>32</integer>
+									<integer>31</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -306,7 +305,7 @@
 							<real>325</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>320 93 1456 1085 0 0 1920 1178 </string>
+						<string>323 93 1456 1085 0 0 1920 1178 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -324,7 +323,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>8827C7F21325367F00B27E1B</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>PathControllerTests.h</string>
+								<string>README.markdown</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -332,11 +331,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>8827C7F31325367F00B27E1B</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>PathControllerTests.h</string>
+										<string>README.markdown</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>8827CC2D13258A2300B27E1B</string>
+										<string>8827CC3413258C4A00B27E1B</string>
 										<key>history</key>
 										<array>
 											<string>8827C8D71325590600B27E1B</string>
@@ -384,7 +383,6 @@
 											<string>8827CB0C13257FC800B27E1B</string>
 											<string>8827CB0D13257FC800B27E1B</string>
 											<string>8827CB0E13257FC800B27E1B</string>
-											<string>8827CB1113257FC800B27E1B</string>
 											<string>8827CB1213257FC800B27E1B</string>
 											<string>8827CB5C1325828500B27E1B</string>
 											<string>8827CB7E1325839400B27E1B</string>
@@ -396,8 +394,9 @@
 											<string>8827CC2713258A1000B27E1B</string>
 											<string>8827CC2813258A1000B27E1B</string>
 											<string>8827CC2913258A1000B27E1B</string>
-											<string>8827CC2A13258A1000B27E1B</string>
-											<string>8827CC2B13258A1000B27E1B</string>
+											<string>8827CC2F13258BA400B27E1B</string>
+											<string>8827CC3213258C4A00B27E1B</string>
+											<string>8827CC3313258C4A00B27E1B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -413,7 +412,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1109, 656}}</string>
 								<key>RubberWindowFrame</key>
-								<string>320 93 1456 1085 0 0 1920 1178 </string>
+								<string>323 93 1456 1085 0 0 1920 1178 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -492,7 +491,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {1109, 356}}</string>
 										<key>RubberWindowFrame</key>
-										<string>320 93 1456 1085 0 0 1920 1178 </string>
+										<string>323 93 1456 1085 0 0 1920 1178 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -720,7 +719,7 @@
 		<string>/Users/jesse/Downloads/jessegrosjean-PlainText-9269f3542ff829e20c1a073ec6a751d009cd3bef/DropboxSync/DropboxSync.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>320 93 1456 1085 0 0 1920 1178 </string>
+	<string>323 93 1456 1085 0 0 1920 1178 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

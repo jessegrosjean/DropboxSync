@@ -377,6 +377,13 @@
 			8827CC2B13258A1000B27E1B /* PBXTextBookmark */ = 8827CC2B13258A1000B27E1B /* PBXTextBookmark */;
 			8827CC2C13258A1000B27E1B /* PBXTextBookmark */ = 8827CC2C13258A1000B27E1B /* PBXTextBookmark */;
 			8827CC2D13258A2300B27E1B /* PBXTextBookmark */ = 8827CC2D13258A2300B27E1B /* PBXTextBookmark */;
+			8827CC2E13258BA400B27E1B /* PBXTextBookmark */ = 8827CC2E13258BA400B27E1B /* PBXTextBookmark */;
+			8827CC2F13258BA400B27E1B /* PBXTextBookmark */ = 8827CC2F13258BA400B27E1B /* PBXTextBookmark */;
+			8827CC3013258BA400B27E1B /* PBXTextBookmark */ = 8827CC3013258BA400B27E1B /* PBXTextBookmark */;
+			8827CC3113258BA400B27E1B /* PBXTextBookmark */ = 8827CC3113258BA400B27E1B /* PBXTextBookmark */;
+			8827CC3213258C4A00B27E1B /* PBXTextBookmark */ = 8827CC3213258C4A00B27E1B /* PBXTextBookmark */;
+			8827CC3313258C4A00B27E1B /* PBXTextBookmark */ = 8827CC3313258C4A00B27E1B /* PBXTextBookmark */;
+			8827CC3413258C4A00B27E1B /* PBXTextBookmark */ = 8827CC3413258C4A00B27E1B /* PBXTextBookmark */;
 		};
 		sourceControlManager = 8827C8011325367F00B27E1B /* Source Control */;
 		userBuildSettings = {
@@ -484,9 +491,9 @@
 	};
 	8827C8D4132558FA00B27E1B /* README.markdown */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {3253, 698}}";
-			sepNavSelRange = "{2194, 0}";
-			sepNavVisRange = "{0, 2194}";
+			sepNavIntBoundsRect = "{{0, 0}, {3253, 576}}";
+			sepNavSelRange = "{1783, 0}";
+			sepNavVisRange = "{0, 2495}";
 		};
 	};
 	8827C8D71325590600B27E1B /* PBXTextBookmark */ = {
@@ -749,7 +756,7 @@
 		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
 		name = "README.markdown: 1";
 		rLen = 0;
-		rLoc = 2194;
+		rLoc = 2495;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -1553,8 +1560,8 @@
 	8827CA58132571FA00B27E1B /* PathControllerTests.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1048, 576}}";
-			sepNavSelRange = "{524, 0}";
-			sepNavVisRange = "{0, 770}";
+			sepNavSelRange = "{522, 0}";
+			sepNavVisRange = "{0, 768}";
 		};
 	};
 	8827CA59132571FA00B27E1B /* PathControllerTests.m */ = {
@@ -1928,7 +1935,7 @@
 		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
 		name = "README.markdown: 28";
 		rLen = 0;
-		rLoc = 2194;
+		rLoc = 2495;
 		rType = 0;
 		vrLen = 2194;
 		vrLoc = 0;
@@ -3260,6 +3267,76 @@
 		rLoc = 524;
 		rType = 0;
 		vrLen = 770;
+		vrLoc = 0;
+	};
+	8827CC2E13258BA400B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827CA58132571FA00B27E1B /* PathControllerTests.h */;
+		name = "PathControllerTests.h: 23";
+		rLen = 0;
+		rLoc = 524;
+		rType = 0;
+		vrLen = 770;
+		vrLoc = 0;
+	};
+	8827CC2F13258BA400B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827CAA01325734800B27E1B /* PathController.h */;
+		name = "PathController.h: 25";
+		rLen = 30;
+		rLoc = 760;
+		rType = 0;
+		vrLen = 1314;
+		vrLoc = 0;
+	};
+	8827CC3013258BA400B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
+		name = "README.markdown: 28";
+		rLen = 0;
+		rLoc = 2495;
+		rType = 0;
+		vrLen = 2194;
+		vrLoc = 0;
+	};
+	8827CC3113258BA400B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
+		name = "README.markdown: 27";
+		rLen = 0;
+		rLoc = 2423;
+		rType = 0;
+		vrLen = 2234;
+		vrLoc = 0;
+	};
+	8827CC3213258C4A00B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827CA58132571FA00B27E1B /* PathControllerTests.h */;
+		name = "PathControllerTests.h: 23";
+		rLen = 0;
+		rLoc = 522;
+		rType = 0;
+		vrLen = 768;
+		vrLoc = 0;
+	};
+	8827CC3313258C4A00B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
+		name = "README.markdown: 15";
+		rLen = 0;
+		rLoc = 1540;
+		rType = 0;
+		vrLen = 2254;
+		vrLoc = 0;
+	};
+	8827CC3413258C4A00B27E1B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8827C8D4132558FA00B27E1B /* README.markdown */;
+		name = "README.markdown: 17";
+		rLen = 0;
+		rLoc = 1783;
+		rType = 0;
+		vrLen = 2495;
 		vrLoc = 0;
 	};
 	AA747D9E0F9514B9006C5449 /* DropboxSync_Prefix.pch */ = {

@@ -10,18 +10,22 @@ PathController maintains state on synced paths and fires notifications when thos
 
 DropboxSync doesn't handle local renaming of synced folders well. Renames are synced as Delete/Add on server. For files this works, but for directories there are no checks on place to see if server directories contents have been modified, and so a local rename will just delete those files. I just disable local folder rename in my app, a better solution would be to make to the Dropboxe API Rename command.
 
+## Running Tests
+
+Before running tests you must set your application keys and dropbox password in PathControllerTests.h. You also need to copy the DropboxTestFolderFixture (in Tests) to you Dropbox account and then update PathControllerTests.h with that path.
+
 ## Basic usage
 
-// 1. Set Dropbox shared session with keys from app using API
-[DBSession setSharedSession:[[[DBSession alloc] initWithConsumerKey:CONSUMERKEY consumerSecret:CONSUMERSECRET] autorelease]];
+    // 1. Set Dropbox shared session with keys from app using API
+    [DBSession setSharedSession:[[[DBSession alloc] initWithConsumerKey:CONSUMERKEY consumerSecret:CONSUMERSECRET] autorelease]];
 
-// 2. Create path controller.
-PathController *pathController = [[PathController alloc] initWithLocalRoot:LOCAL_ROOT serverRoot:SERVER_ROOT pathMetadataStorePath:METADATA_STORE];
+    // 2. Create path controller.
+    PathController *pathController = [[PathController alloc] initWithLocalRoot:LOCAL_ROOT serverRoot:SERVER_ROOT pathMetadataStorePath:METADATA_STORE];
 
-// 3. If isn't already linked then link
-if (!pathController.isLinked) {
-	[pathController linkWithEmail:DROPBOX_ACCOUNT password:DROPBOX_PASSWORD];
-}
+    // 3. If isn't already linked then link
+    if (!pathController.isLinked) {
+    	[pathController linkWithEmail:DROPBOX_ACCOUNT password:DROPBOX_PASSWORD];
+    }
 
-// 4. Sync top level (not recursive) local root with server root.
-[pathController enqueueFolderSyncPathRequest:pathController.localRoot];
+    // 4. Sync top level (not recursive) local root with server root.
+    [pathController enqueueFolderSyncPathRequest:pathController.localRoot];
