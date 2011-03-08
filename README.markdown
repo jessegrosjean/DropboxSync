@@ -1,5 +1,9 @@
 DropboxSync is designed to keep a local folder hierarchy on iOS synced with a Dropbox folder hierarchy. The goal is to work like Dropbox on other platforms… ie the client application works with files on the file system, and they are magically synced in the background.
 
+## DropboxSDK Installation
+
+You'll need to grab the DropboxSDK from https://github.com/dropbox-sdk-mirror/dropbox-sdk-ios. Move DropboxSDK/ into the project directory. The directory itself is added to .gitignore. More information about the SDK here: https://www.dropbox.com/developers/
+
 ## Operation
 
 Unfortunately DropboxSync can't be quite as magic from an application developers perspective as Dropbox on the Desktop. In particular you are responsible for controlling the sync process through calls to enqueueFolderSyncPathRequest after you've made local changes to files in a directory, or when you want to refresh a directory from the server.
