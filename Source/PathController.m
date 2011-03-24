@@ -113,7 +113,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
  	[managedObjectModel release];
 	[managedObjectContext release];
     [persistentStoreCoordinator release];
-	[delegate release];
 	[super dealloc];
 }
 
