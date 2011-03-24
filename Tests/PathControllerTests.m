@@ -249,6 +249,33 @@
 	}
 }
 
+- (void)testModifyConflict {
+	// 1. Modify file on server
+	[self prepare];
+	NSString *localTemp = [[NSFileManager defaultManager] tempDirectoryUnusedPath];
+	[@"server modify\n" writeToFile:localTemp atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	[client uploadFile:[FILE_TWO precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot fromPath:localTemp];
+	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
+	[fileManager removeItemAtPath:localTemp error:NULL];
+	
+	sleep(4); // seems neccessary, otherwise new get doesn't get new version.
+		
+	// 2. Modify file local
+	[self prepare];
+	[@"local modify\n" writeToFile:[pathController.localRoot stringByAppendingPathComponent:FILE_TWO] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	
+	// 3. Sync
+	[self prepare];
+	[pathController enqueueFolderSyncPathRequest:pathController.localRoot];
+	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];	
+
+	// 3. Assert that local conflict was created.
+	NSArray *contents = [[fileManager contentsOfDirectoryAtPath:pathController.localRoot error:NULL] valueForKey:@"precomposedStringWithCanonicalMapping"];
+	NSArray *knownContents = [[NSArray arrayWithObjects:FILE_ONE, FILE_TWO, @"3.txt", FOLDER_FOUR, nil] valueForKey:@"precomposedStringWithCanonicalMapping"];
+	for (NSString *each in contents) {
+		GHAssertTrue([knownContents containsObject:each] || [each rangeOfString:@"conflicted copy"].location != NSNotFound, nil);
+	}
+}
 
 - (void)testDeletes {
 	// 1. Delete 3.txt on server.
