@@ -292,6 +292,10 @@
 	
 	NSString *string = [NSString stringWithContentsOfFile:[pathController.localRoot stringByAppendingPathComponent:FILE_TWO] encoding:NSUTF8StringEncoding error:NULL];
 	GHAssertEqualObjects(@"one\ntwo\n", string, nil);
+	
+	NSArray *contents = [[fileManager contentsOfDirectoryAtPath:pathController.localRoot error:NULL] valueForKey:@"precomposedStringWithCanonicalMapping"];
+	NSArray *expectedContents = [[NSArray arrayWithObjects:FILE_ONE, FILE_TWO, @"3.txt", FOLDER_FOUR, nil] valueForKey:@"precomposedStringWithCanonicalMapping"];
+	GHAssertEqualObjects(contents, expectedContents, nil);
 }
 
 - (void)testLocalModify {
