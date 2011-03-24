@@ -77,7 +77,7 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 
 @property(readonly) NSString *localRoot;
 @property(nonatomic, retain) NSString *serverRoot;
-//@property(nonatomic, assign) id <PathControllerDelegate> delegate;
+@property(nonatomic, assign) id <PathControllerDelegate> delegate;
 
 #pragma mark -
 #pragma mark Path Modifications
