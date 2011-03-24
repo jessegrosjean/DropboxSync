@@ -111,6 +111,23 @@
 
 	if (localExists) {
 		if ([self pathMetadata:YES].pathState != TemporaryPlaceholderPathState) {
+			NSDate *localModifiedDate = [[fileManager attributesOfItemAtPath:localPath error:nil] valueForKey:NSFileModificationDate];
+			
+			if (localModifiedDate == nil || ![localModifiedDate isEqualToDate:[self pathMetadata:YES].lastSyncDate]) {                
+				// Conflict, new download doesn't match local version (local must have changed) so create a conflict.
+				NSString *conflictPath = [fileManager conflictPathForPath:localPath error:&error];
+				
+				if (!conflictPath) {
+					[self finish:error];
+					return;
+				} else {
+					if (![self.pathController moveItemAtPath:localPath toPath:conflictPath error:&error]) {
+						[self finish:error];
+					}
+				}
+			}
+			
+			/*
 			NSData *localData = [NSData dataWithContentsOfMappedFile:localPath];
 			NSData *downloadedData = [NSData dataWithContentsOfMappedFile:tempDownloadPath];
 			
@@ -126,7 +143,7 @@
 						[self finish:error];
 					}
 				}
-			}
+			}*/
 		}
 		// Remove local in prep for copying in new download
 		[fileManager removeItemAtPath:localPath error:NULL];
