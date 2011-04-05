@@ -20,6 +20,7 @@
 	BOOL schedulingOperations;
 	NSMutableSet *pathOperations;
 	PathController *pathController;
+    NSUInteger operationCount;
 }
 
 - (id)initWithPath:(NSString *)aLocalPath pathController:(PathController *)aPathController;
