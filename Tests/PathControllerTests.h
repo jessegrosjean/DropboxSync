@@ -11,19 +11,15 @@
 #import "PathControllerDelegate.h"
 
 // Application keys
-#define CONSUMERKEY @"vzb4wt6wtm514l6"
-#define CONSUMERSECRET @"7tdt2pgddt4305w"
+#define CONSUMERKEY @""
+#define CONSUMERSECRET @""
 
 // Dropbox Account
-#define DROPBOXTESTACCOUNT @"jesse@hogbaysoftware.com"
-#define DROPBOXTESTACCOUNTPASSWORD @"kimchi5pass"
+#define DROPBOXTESTACCOUNT @""
+#define DROPBOXTESTACCOUNTPASSWORD @""
 
 // Test folder fixture path (copy from PROJECT/Source/Tests/DropboxTestFolderFixture) and put in your dropbox folder.
-//#define TEST_FOLDER_FIXTURE_DROPBOX_PATH @"/Testing/DropboxTestFolderFixture"
-
-#define TEST_FOLDER_FIXTURE_DROPBOX_PATH @"/Hog Bay Software/Operations/SyncTestFixtures/TestFolderUnicode"
-
-
+#define TEST_FOLDER_FIXTURE_DROPBOX_PATH @"/Testing/DropboxTestFolderFixture"
 
 @class PathController;
 
