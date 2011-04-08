@@ -11,7 +11,7 @@
 
 // Return yes if the file should be synced, no if not. If not then a local empy placeholder file will be created
 // for the file and the path state will be set to PermanentPlaceholderPathState
-- (BOOL) shouldSyncFile:(NSString *)file;
-- (void) syncProgress:(float) progress fromPathController:(id) pc;
+- (BOOL)shouldSyncFile:(NSString *)file;
+- (void)syncProgress:(CGFloat)progress fromPathController:(id)aPathController;
 
 @end

@@ -118,11 +118,9 @@
 	[pathOperations removeObject:aPathOperation];
     
     id <PathControllerDelegate> delegate = self.pathController.delegate;
-	BOOL showProgress = [delegate respondsToSelector:@selector(syncProgress:fromPathController:)];
-    // Call path controller delegate to show sync progress        
-    if (showProgress) 
-        [delegate syncProgress: ((float) (operationCount - [pathOperations count]))/operationCount
-            fromPathController: self.pathController];
+	if ([delegate respondsToSelector:@selector(syncProgress:fromPathController:)]) {
+        [delegate syncProgress:((CGFloat)(operationCount - [pathOperations count])) / operationCount fromPathController:self.pathController];
+	}
     
 	[self finishIfSyncOperationsAreFinished];
 }

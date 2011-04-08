@@ -643,5 +643,7 @@
 	return YES;
 }
 
+- (void)syncProgress:(CGFloat)progress fromPathController:(id)aPathController {
+}
 
 @end
