@@ -170,9 +170,31 @@ NSString* kDBProtocolHTTPS = @"https";
 
 
 - (void)didParseMetadata:(DBMetadata*)metadata {
+	// Hack to catch case where metadata files to parse (maybe hotspot paywall) and notify delegate of
+	// error instead of telling them metadata loaded. This case is supposed to be fixed in next Dropbox SDK
+	// release, at which point this code should be taken out.
+	if (metadata.path == nil) {
+		if ([delegate respondsToSelector:@selector(restClient:loadMetadataFailedWithError:)]) {
+			NSError *error = [NSError errorWithDomain:@"Hog Bay Hack"
+												 code:10000
+											 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+													   NSLocalizedString(@"Error parsing Dropbox metadata json.", nil), NSLocalizedDescriptionKey,
+													   nil]];
+			
+			[delegate restClient:self loadMetadataFailedWithError:error];
+		}
+	} else {
+		if ([delegate respondsToSelector:@selector(restClient:loadedMetadata:)]) {
+			[delegate restClient:self loadedMetadata:metadata];
+		}
+	}
+	
+	// Dropbox version of this method
+	/*
     if ([delegate respondsToSelector:@selector(restClient:loadedMetadata:)]) {
         [delegate restClient:self loadedMetadata:metadata];
     }
+	 */
 }
 
 
