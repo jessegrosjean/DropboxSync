@@ -12,17 +12,32 @@
 #import "PathController.h"
 #import "PathMetadata.h"
 #include <unistd.h>
+#import "NHUnitIPhoneAppDelegate.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 #define FILE_ONE @"1 はじめ.txt"
 #define FILE_TWO @"2 ū.txt"
 #define FOLDER_FOUR @"4 ぜら"
 
+@interface PathController (tests_friend)
+- (PathMetadata *)pathMetadataForLocalPath:(NSString *)localPath createNewLocalIfNeeded:(BOOL)createIfNeeded;
+@end
+
+@interface PathControllerTests ()
+@property (nonatomic, retain) PathMetadata* fileOneMetadata;
+@property (nonatomic, retain) PathMetadata* fileTwoMetadata;
+@end
+
 @implementation PathControllerTests
+@synthesize fileOneMetadata = _fileOneMetadata;
+@synthesize fileTwoMetadata = _fileTwoMetadata;
 
 - (id)init {
 	self = [super init];
 	fileManager = [[NSFileManager defaultManager] retain];
-	[DBSession setSharedSession:[[[DBSession alloc] initWithConsumerKey:CONSUMERKEY consumerSecret:CONSUMERSECRET] autorelease]];
+	[DBSession setSharedSession:[[[DBSession alloc] initWithAppKey:CONSUMERKEY appSecret:CONSUMERSECRET root:kDBRootAppFolder] autorelease]];
+    
+    [DBSession sharedSession].delegate = self;
 	client = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
 	client.delegate = self;
 	return self;
@@ -31,6 +46,8 @@
 - (void)dealloc {
 	[fileManager removeItemAtPath:pathController.localRoot error:NULL];
 	[fileManager release];
+    self.fileOneMetadata = nil;
+    self.fileTwoMetadata = nil;
 	client.delegate = nil;
 	[client release];
 	[super dealloc];
@@ -39,7 +56,7 @@
 - (void)link {
 	if (!pathController.isLinked) {
 		[self prepare:@selector(setUp)];
-		[pathController linkWithEmail:DROPBOXTESTACCOUNT password:DROPBOXTESTACCOUNTPASSWORD];
+        [[DBSession sharedSession] linkFromController:[(NHUnitIPhoneAppDelegate*)[UIApplication sharedApplication].delegate mainViewController]];
 		[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
 		GHAssertTrue(pathController.isLinked, nil);
 	}
@@ -54,8 +71,6 @@
 	pathController = [[PathController alloc] initWithLocalRoot:localRoot serverRoot:serverRoot pathMetadataStorePath:[[NSFileManager defaultManager] tempDirectoryUnusedPath]];
 	pathController.delegate = self;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pathControllerLinkedNotification:) name:PathControllerLinkedNotification object:pathController];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pathControllerLinkFailedNotification:) name:PathControllerLinkFailedNotification object:pathController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginingSyncNotification:) name:BeginingFolderSyncNotification object:pathController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endingSyncNotification:) name:EndingFolderSyncNotification object:pathController];
 	
@@ -68,13 +83,16 @@
 	[self prepare];
 	[pathController enqueueFolderSyncPathRequest:pathController.localRoot];
 	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
-		
+	
 	NSArray *contents = [[fileManager contentsOfDirectoryAtPath:pathController.localRoot error:NULL] valueForKey:@"precomposedStringWithCanonicalMapping"];
 	NSArray *expectedContents = [[NSArray arrayWithObjects:FILE_ONE, FILE_TWO, @"3.txt", FOLDER_FOUR, nil] valueForKey:@"precomposedStringWithCanonicalMapping"];
 	GHAssertEqualObjects(contents, expectedContents, nil);
 	
 	GHAssertTrue([pathController stateForPath:[pathController.localRoot stringByAppendingPathComponent:FILE_ONE]] == SyncedPathState, nil);
 	GHAssertTrue([pathController stateForPath:[pathController.localRoot stringByAppendingPathComponent:FOLDER_FOUR]] == SyncedPathState, nil);
+    
+    self.fileOneMetadata = [pathController pathMetadataForLocalPath:[pathController.localRoot stringByAppendingPathComponent:FILE_ONE] createNewLocalIfNeeded:YES];
+    self.fileTwoMetadata = [pathController pathMetadataForLocalPath:[pathController.localRoot stringByAppendingPathComponent:FILE_TWO] createNewLocalIfNeeded:YES];
 }
 
 - (void)tearDown {
@@ -189,7 +207,7 @@
 	[self prepare];
 	NSString *localTemp = [[NSFileManager defaultManager] tempDirectoryUnusedPath];
 	[@"testing..." writeToFile:localTemp atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	[client uploadFile:[@"6 ぜら.txt" precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot fromPath:localTemp];
+	[client uploadFile:[@"6 ぜら.txt" precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot withParentRev:nil fromPath:localTemp];
 	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
 	[fileManager removeItemAtPath:localTemp error:NULL];
 
@@ -231,7 +249,7 @@
 	[self prepare];
 	NSString *localTemp = [[NSFileManager defaultManager] tempDirectoryUnusedPath];
 	[@"testing..." writeToFile:localTemp atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	[client uploadFile:@"6.txt" toPath:pathController.serverRoot fromPath:localTemp];
+	[client uploadFile:@"6.txt" toPath:pathController.serverRoot withParentRev:nil fromPath:localTemp];
 	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
 	[fileManager removeItemAtPath:localTemp error:NULL];
 	
@@ -254,7 +272,7 @@
 	[self prepare];
 	NSString *localTemp = [[NSFileManager defaultManager] tempDirectoryUnusedPath];
 	[@"server modify\n" writeToFile:localTemp atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	[client uploadFile:[FILE_TWO precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot fromPath:localTemp];
+	[client uploadFile:[FILE_TWO precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot withParentRev:self.fileTwoMetadata.rev fromPath:localTemp];
 	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
 	[fileManager removeItemAtPath:localTemp error:NULL];
 	
@@ -306,7 +324,7 @@
 	[self prepare];
 	NSString *localTemp = [[NSFileManager defaultManager] tempDirectoryUnusedPath];
 	[@"one\ntwo\n" writeToFile:localTemp atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	[client uploadFile:[FILE_TWO precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot fromPath:localTemp];
+	[client uploadFile:[FILE_TWO precomposedStringWithCanonicalMapping] toPath:pathController.serverRoot withParentRev:self.fileTwoMetadata.rev fromPath:localTemp];
 	[self waitForStatus:kGHUnitWaitStatusSuccess timeout:10000.0];
 	[fileManager removeItemAtPath:localTemp error:NULL];
 	
@@ -569,14 +587,6 @@
 	[self notify:kGHUnitWaitStatusSuccess forSelector:waitSelector_];
 }
 
-- (void)pathControllerLinkedNotification:(NSNotification *)aNotification {
-	[self notify:kGHUnitWaitStatusSuccess forSelector:waitSelector_];
-}
-
-- (void)pathControllerLinkFailedNotification:(NSNotification *)aNotification {
-	[self notify:kGHUnitWaitStatusFailure forSelector:waitSelector_];
-}
-
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
 	if (metadata.isDeleted) {
 		[self notify:kGHUnitWaitStatusFailure forSelector:waitSelector_];
@@ -616,7 +626,8 @@
 	[self notify:kGHUnitWaitStatusFailure forSelector:waitSelector_];
 }
 
-- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)srcPath {
+- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath 
+          metadata:(DBMetadata*)metadata {
 	[self notify:kGHUnitWaitStatusSuccess forSelector:waitSelector_];
 }
 
@@ -624,8 +635,7 @@
 	NSLog(@"uploadFileFailedWithError %@", error);
 	[self notify:kGHUnitWaitStatusFailure forSelector:waitSelector_];
 }
-
-- (void)restClient:(DBRestClient*)client copiedPath:(NSString *)from_path toPath:(NSString *)to_path {
+- (void)restClient:(DBRestClient*)client copiedPath:(NSString *)fromPath to:(DBMetadata *)to {
 	[self notify:kGHUnitWaitStatusSuccess forSelector:waitSelector_];
 }
 
@@ -644,6 +654,11 @@
 }
 
 - (void)syncProgress:(CGFloat)progress fromPathController:(id)aPathController {
+}
+
+#pragma mark DBSessionDelegate methods
+- (void)sessionDidReceiveAuthorizationFailure:(DBSession *)session userId:(NSString *)userId {
+    [[DBSession sharedSession] linkUserId:userId fromController:[(NHUnitIPhoneAppDelegate*)[UIApplication sharedApplication].delegate mainViewController]];
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "NSSet_Additions.h"
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 
 @implementation NSSet (DropboxSyncAdditions)

@@ -8,8 +8,6 @@ PathController maintains state on synced paths and fires notifications when thos
 
 ## Requirements
 
-DropboxSync uses a slightly (DBRestClient>didParseMetadata) modified version of the Dropbox SDK that fixes a bug with wifi hotspot paywall pages.
-
 DropboxSync uses Coredata to store local metadata used by the sync process.
 
 ## Limitations
@@ -18,20 +16,21 @@ DropboxSync doesn't handle local renaming of synced folders well. Renames are sy
 
 ## Running Tests
 
-Before running tests you must set your application keys and dropbox password in PathControllerTests.h. You also need to copy the DropboxTestFolderFixture (in Tests) to you Dropbox account and then update PathControllerTests.h with that path.
+Before running tests you must set your application keys in PathControllerTests.h. You also need to copy the DropboxTestFolderFixture (in Tests) to you Dropbox account and then update PathControllerTests.h with that path.
+
+Search and replace APP_ID in Tests-Info.plist
+
 
 ## Basic usage
 
     // 1. Set Dropbox shared session with keys from app using API
     [DBSession setSharedSession:[[[DBSession alloc] initWithConsumerKey:CONSUMERKEY consumerSecret:CONSUMERSECRET] autorelease]];
 
-    // 2. Create path controller.
-    PathController *pathController = [[PathController alloc] initWithLocalRoot:LOCAL_ROOT serverRoot:SERVER_ROOT pathMetadataStorePath:METADATA_STORE];
+    // 2. Link drobox if not already
+    [DBSession sharedSession] linkFromController:<YOUR_MAIN_VIEW_CONTROLER>];
 
-    // 3. If isn't already linked then link
-    if (!pathController.isLinked) {
-    	[pathController linkWithEmail:DROPBOX_ACCOUNT password:DROPBOX_PASSWORD];
-    }
+    // 3. Create path controller.
+    PathController *pathController = [[PathController alloc] initWithLocalRoot:LOCAL_ROOT serverRoot:SERVER_ROOT pathMetadataStorePath:METADATA_STORE];
 
     // 4. Sync top level (not recursive) local root with server root.
     [pathController enqueueFolderSyncPathRequest:pathController.localRoot];

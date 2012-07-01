@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
   if (getenv("GHUNIT_CLI")) {
     retVal = [GHTestRunner run];
   } else {
-    retVal = UIApplicationMain(argc, argv, nil, @"GHUnitIPhoneAppDelegate");
+    retVal = UIApplicationMain(argc, argv, nil, @"NHUnitIPhoneAppDelegate");
   }
   [pool release];
   return retVal;

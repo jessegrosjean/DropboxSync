@@ -43,7 +43,8 @@
 			tempUploadPath = [[fileManager tempDirectoryUnusedPath] retain];
 			if ([fileManager copyItemAtPath:localPath toPath:tempUploadPath error:&error]) {
 				[self updatePathActivity:PutPathActivity];
-				[self.client uploadFile:[serverPath lastPathComponent] toPath:[serverPath stringByDeletingLastPathComponent] fromPath:tempUploadPath];
+                [self.client uploadFile:[serverPath lastPathComponent] toPath:[serverPath stringByDeletingLastPathComponent] withParentRev:serverMetadata.rev fromPath:tempUploadPath];
+                
 			} else {
 				[self finish:error];
 			}
@@ -70,7 +71,7 @@
 	[self retryWithError:error];
 }
 
-- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath {
+- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
 	PathMetadata *pathMetadata = [self pathMetadata:YES];
 
 	pathMetadata.pathState = SyncedPathState;
@@ -78,24 +79,13 @@
 	pathMetadata.lastSyncIsDirectory = NO;
 	pathMetadata.lastSyncName = [localPath lastPathComponent];
 	pathMetadata.lastSyncDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:srcPath error:NULL] fileModificationDate];
+    pathMetadata.lastSyncHash = metadata.rev; // store revision value in hash for a file.
 	[pathMetadata.managedObjectContext save:NULL];
-
-	[self.client loadMetadata:[self.pathController localPathToServer:localPath]];
-}
-
-- (void)restClient:(DBRestClient*)aClient uploadFileFailedWithError:(NSError*)error {
-	[self retryWithError:error];
-}
-	
-#pragma mark -
-#pragma mark DBRestClientDelegate
-
-- (void)restClient:(DBRestClient*)aClient loadedMetadata:(DBMetadata*)aServerMetadata {
+    
+    self.serverMetadata = metadata;
+    
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	PathMetadata *pathMetadata = [self pathMetadata:NO];
-
-	self.serverMetadata = aServerMetadata;
-
+    
 	if (pathMetadata != nil && !pathMetadata.isDeleted && [fileManager fileExistsAtPath:localPath]) {
 		NSDate *lastSyncDate = pathMetadata.lastSyncDate;
 		NSDate *currentDate = [[fileManager attributesOfItemAtPath:localPath error:NULL] fileModificationDate];
@@ -107,10 +97,6 @@
 	}
 	
 	[self finish];
-}
-
-- (void)restClient:(DBRestClient*)aClient loadMetadataFailedWithError:(NSError*)error {
-	[self finish:error];
 }
 
 @end

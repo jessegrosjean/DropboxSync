@@ -6,7 +6,7 @@
 //  Copyright 2010 Hog Bay Software. All rights reserved.
 //
 
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 #import "PathMetadata.h"
 
 //

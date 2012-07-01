@@ -7,7 +7,7 @@
 //
 
 #import "PathOperation.h"
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 //
 // Operation to (safely, ie don't delete unsynced data) delete local path.

@@ -8,7 +8,7 @@
 
 #import <CoreData/CoreData.h>
 #import "PathControllerDelegate.h"
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 //
 // PathController is the public API for Dropbox sync.
@@ -45,7 +45,7 @@ typedef NSUInteger PathControllerLogLevel;
 
 NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 
-@interface PathController : NSObject <DBRestClientDelegate, DBLoginControllerDelegate, DBSessionDelegate> {
+@interface PathController : NSObject <DBRestClientDelegate> {
 	NSString *localRoot;
 	NSString *serverRoot;
 	NSString *pathMetadataStorePath;
@@ -104,7 +104,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 #pragma mark Linking
 
 @property(readonly) BOOL isLinked;
-- (void)linkWithEmail:(NSString *)email password:(NSString *)password;
 - (void)unlink:(BOOL)discardSessionKeys;
 
 #pragma mark -
@@ -117,8 +116,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 
 extern NSString *BeginingFolderSyncNotification;
 extern NSString *EndingFolderSyncNotification;
-extern NSString *PathControllerLinkedNotification;
-extern NSString *PathControllerLinkFailedNotification;
 
 // Path notifications
 extern NSString *PathsChangedNotification;

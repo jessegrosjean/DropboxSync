@@ -2,5 +2,5 @@
     #import <Foundation/Foundation.h>
 	#import <CoreGraphics/CoreGraphics.h>
 	#import <UIKit/UIKit.h>
-	#import "DropboxSDK.h"
+	#import <DropboxSDK/DropboxSDK.h>
 #endif

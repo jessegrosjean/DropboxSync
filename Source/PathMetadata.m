@@ -119,6 +119,12 @@
 	[self didChangeValueForKey:@"lastSyncIsDirectory"];	
 }
 
+
+- (NSString*) rev {
+    // for files, using lastSyncHash to store the revision
+    return  self.lastSyncHash;
+}
+
 @end
 
 @implementation PathController (PathMetadataPrivate)

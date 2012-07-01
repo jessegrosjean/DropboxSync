@@ -28,7 +28,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 @end
 
 @implementation PathController
-
 #pragma mark -
 #pragma mark Initialization
 
@@ -72,8 +71,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	deleteOperationQueue.maxConcurrentOperationCount = 3;
 	folderSyncPathOperationOperationQueue = [[NSOperationQueue alloc] init];
 	folderSyncPathOperationOperationQueue.maxConcurrentOperationCount = 1;
-	
-	[DBSession sharedSession].delegate = self;
 
 	if (!aServerRoot) aServerRoot = [@"/" stringByAppendingPathComponent:[[NSProcessInfo processInfo] processName]];
 	self.serverRoot = aServerRoot;
@@ -197,6 +194,7 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 				for (NSString *each in [fileManager contentsOfDirectoryAtPath:aLocalPath error:NULL]) {
 					[self removeUnchangedItemsAtPath:[aLocalPath stringByAppendingPathComponent:each] error:error removedAll:removedAll];
 				}
+                
 				
 				if ([[fileManager contentsOfDirectoryAtPath:aLocalPath error:NULL] count] == 0) {
 					if ([fileManager removeItemAtPath:aLocalPath error:NULL]) {
@@ -409,19 +407,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	return [[DBSession sharedSession] isLinked];
 }
 
-- (void)linkWithEmail:(NSString *)email password:(NSString *)password {
-	if (email != nil && password != nil) {
-		if (!manualLinkClient) {
-			manualLinkClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-			manualLinkClient.delegate = self;
-		}
-		[manualLinkClient loginWithEmail:email password:password];
-	} else {
-		DBLoginController *loginController = [[[DBLoginController alloc] init] autorelease];
-		loginController.delegate = self;
-		[loginController presentFromController:nil];
-	}
-}
 
 - (void)unlink:(BOOL)discardSessionKeys {
 	NSError *error;
@@ -460,7 +445,7 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	}
 
 	if (discardSessionKeys) {
-		[[DBSession sharedSession] unlink];
+		[[DBSession sharedSession] unlinkAll];
 	}
 	
 	[[NSUserDefaults standardUserDefaults] synchronize];
@@ -542,43 +527,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	// localPathsToPathActivity
 }
 
-#pragma mark -
-#pragma mark DBSessionDelegate methods
-
-- (void)loginSuccess {
-	[[NSNotificationCenter defaultCenter] postNotificationName:PathControllerLinkedNotification object:self];
-}
-
-- (void)loginFailed {
-	[getOperationQueue cancelAllOperations];
-	[putOperationQueue cancelAllOperations];
-	[deleteOperationQueue cancelAllOperations];
-	[[NSNotificationCenter defaultCenter] postNotificationName:PathControllerLinkFailedNotification object:self];
-}
-
-- (void)sessionDidReceiveAuthorizationFailure:(DBSession*)session {
-	[self loginFailed];
-	[self linkWithEmail:nil password:nil];
-}
-
-#pragma mark -
-#pragma mark Dropbox Login delegate
-
-- (void)loginControllerDidLogin:(DBLoginController*)controller {
-	[self loginSuccess];
-}
-
-- (void)loginControllerDidCancel:(DBLoginController*)controller {
-	[self loginFailed];
-}
-
-- (void)restClientDidLogin:(DBRestClient*)client {	
-	[self loginSuccess];
-}
-
-- (void)restClient:(DBRestClient*)client loginFailedWithError:(NSError*)error {
-	[self loginFailed];
-}
 
 @end
 
@@ -586,8 +534,6 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 @synthesize pathController;
 @end
 
-NSString *PathControllerLinkedNotification = @"PathControllerLinkedNotification";
-NSString *PathControllerLinkFailedNotification = @"PathControllerLinkFailedNotification";
 NSString *BeginingFolderSyncNotification = @"BeginingFolderSyncNotification";
 NSString *EndingFolderSyncNotification = @"EndingFolderSyncNotification";
 

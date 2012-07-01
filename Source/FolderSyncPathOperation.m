@@ -15,7 +15,7 @@
 #import "PutPathOperation.h"
 #import "NSSet_Additions.h"
 #import "PathController.h"
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 #include <sys/stat.h>
 #include <dirent.h>
 

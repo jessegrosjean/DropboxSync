@@ -7,27 +7,28 @@
 //
 
 #import <GHUnitIOS/GHUnitIOS.h>
-#import "DropboxSDK.h"
+#import <DropboxSDK/DropboxSDK.h>
 #import "PathControllerDelegate.h"
 
 // Application keys
-#define CONSUMERKEY @""
-#define CONSUMERSECRET @""
+#define CONSUMERKEY @"APP_ID"
+#define CONSUMERSECRET @"APP_SECRET"
 
-// Dropbox Account
-#define DROPBOXTESTACCOUNT @""
-#define DROPBOXTESTACCOUNTPASSWORD @""
 
 // Test folder fixture path (copy from PROJECT/Source/Tests/DropboxTestFolderFixture) and put in your dropbox folder.
 #define TEST_FOLDER_FIXTURE_DROPBOX_PATH @"/Testing/DropboxTestFolderFixture"
 
 @class PathController;
-
-@interface PathControllerTests : GHAsyncTestCase <DBRestClientDelegate, PathControllerDelegate> {
+@class PathMetadata;
+@interface PathControllerTests : GHAsyncTestCase <DBRestClientDelegate, PathControllerDelegate, DBSessionDelegate> {
 	DBRestClient *client;
 	PathController *pathController;
 	NSFileManager *fileManager;
 	BOOL deleteFailMeansSuccess;
+    
+    PathMetadata* _fileOneMetadata;
+    PathMetadata* _fileTwoMetadata;
+    
 }
 
 @end

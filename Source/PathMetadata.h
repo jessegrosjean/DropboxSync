@@ -47,7 +47,7 @@
 @property(nonatomic, retain) NSDate *lastSyncDate;
 @property(nonatomic, retain) NSString *lastSyncHash;
 @property(nonatomic, assign) BOOL lastSyncIsDirectory;
-
+@property(nonatomic, readonly) NSString* rev;
 @end
 
 @interface NSManagedObject (Children)

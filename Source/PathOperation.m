@@ -102,7 +102,7 @@
 	}
 	
 	[super cancel];
-	[client cancelRequests];
+	[client cancelAllRequests];
 	PathControllerLogInfo(@"Canceled %@", self);	
 	[self finish];
 }
@@ -172,6 +172,9 @@
 				}
 				pathMetadata.lastSyncDate = serverMetadata.lastModifiedDate;
 				pathMetadata.lastSyncIsDirectory = serverMetadata.isDirectory;
+                if (!serverMetadata.isDirectory) {
+                    pathMetadata.lastSyncHash = serverMetadata.rev; 
+                }
 			}
 			pathMetadata.pathState = successPathState;
 			[folderSyncPathOperation.pathController enqueuePathChangedNotification:localPath changeType:StateChangedPathsKey];

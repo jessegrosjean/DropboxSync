@@ -8,7 +8,7 @@
 
 
 #import "NSFileManager_Additions.h"
-#import "NSString+Dropbox.h"
+#import <DropboxSDK/NSString+Dropbox.h>
 #import "NSSet_Additions.h"
 
 @implementation NSFileManager (DropboxSyncAdditions)
