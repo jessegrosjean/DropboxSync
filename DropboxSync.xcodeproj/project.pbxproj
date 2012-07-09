@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0164C9C315A5821F00A98508 /* FullSyncOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0164C9C115A5821E00A98508 /* FullSyncOperation.h */; };
+		0164C9C415A5821F00A98508 /* FullSyncOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164C9C215A5821E00A98508 /* FullSyncOperation.m */; };
 		01D635D7159E082000E49063 /* NHUnitIPhoneAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D635D6159E082000E49063 /* NHUnitIPhoneAppDelegate.m */; };
 		01D635DA159E0A6600E49063 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D635D9159E0A6600E49063 /* DropboxSDK.framework */; };
 		01D635DB159E0A6600E49063 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D635D9159E0A6600E49063 /* DropboxSDK.framework */; };
@@ -72,6 +74,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0164C9C115A5821E00A98508 /* FullSyncOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullSyncOperation.h; path = Source/FullSyncOperation.h; sourceTree = "<group>"; };
+		0164C9C215A5821E00A98508 /* FullSyncOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullSyncOperation.m; path = Source/FullSyncOperation.m; sourceTree = "<group>"; };
 		01D635D5159E082000E49063 /* NHUnitIPhoneAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NHUnitIPhoneAppDelegate.h; sourceTree = "<group>"; };
 		01D635D6159E082000E49063 /* NHUnitIPhoneAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NHUnitIPhoneAppDelegate.m; sourceTree = "<group>"; };
 		01D635D9159E0A6600E49063 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
@@ -239,6 +243,8 @@
 				8827CAB71325737900B27E1B /* PathOperation.m */,
 				8827CAB81325737900B27E1B /* PutPathOperation.h */,
 				8827CAB91325737900B27E1B /* PutPathOperation.m */,
+				0164C9C115A5821E00A98508 /* FullSyncOperation.h */,
+				0164C9C215A5821E00A98508 /* FullSyncOperation.m */,
 			);
 			name = "Path Operations";
 			sourceTree = "<group>";
@@ -307,6 +313,7 @@
 				8827CAC61325737900B27E1B /* GetPathOperation.h in Headers */,
 				8827CAC81325737900B27E1B /* PathOperation.h in Headers */,
 				8827CACA1325737900B27E1B /* PutPathOperation.h in Headers */,
+				0164C9C315A5821F00A98508 /* FullSyncOperation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +361,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Mothership Software Ltd";
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "DropboxSync" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -423,6 +431,7 @@
 				8827CAC91325737900B27E1B /* PathOperation.m in Sources */,
 				8827CACB1325737900B27E1B /* PutPathOperation.m in Sources */,
 				8827CADD132573FF00B27E1B /* PathMetadata.xcdatamodeld in Sources */,
+				0164C9C415A5821F00A98508 /* FullSyncOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,7 +442,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/DropboxSync.dst;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -446,6 +458,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/DropboxSync_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DropboxSync;
 			};
 			name = Debug;
@@ -454,7 +467,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/DropboxSync.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -464,6 +480,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/DropboxSync_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DropboxSync;
 			};
 			name = Release;

@@ -95,7 +95,7 @@
 #pragma mark -
 #pragma mark DBRestClientDelegate
 
-- (void)restClient:(DBRestClient*)aClient loadedFile:(NSString*)destPath {
+- (void)restClient:(DBRestClient*)client loadedFile:(NSString*)destPath contentType:(NSString*)contentType metadata:(DBMetadata*)metadata {
 	NSAssert([destPath isEqual:tempDownloadPath], @"");
 	
 	NSDictionary *attributes = [NSDictionary dictionaryWithObject:serverMetadata.lastModifiedDate forKey:NSFileModificationDate];
@@ -107,7 +107,8 @@
 		return;
 	}
 
-	BOOL localExists = [fileManager fileExistsAtPath:localPath];
+    BOOL isDirectory = NO;
+	BOOL localExists = [fileManager fileExistsAtPath:localPath isDirectory:&isDirectory];
 
 	if (localExists) {
 		if ([self pathMetadata:YES].pathState != TemporaryPlaceholderPathState) {
@@ -154,6 +155,13 @@
 			return;
 		}
 	}
+    
+    if (isDirectory) {
+        [self pathMetadata:YES].lastSyncHash = metadata.hash;
+    }
+    else {
+        [self pathMetadata:YES].lastSyncHash = metadata.rev;
+    }
 
 	// Copy new download into local file system.
 	if ([fileManager copyItemAtPath:tempDownloadPath toPath:localPath error:&error]) {

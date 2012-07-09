@@ -14,7 +14,7 @@
 // operations have completed.
 //
 
-@interface FolderSyncPathOperation : PathOperation {
+@interface FolderSyncPathOperation : PathOperation<PathControllerSyncOperationDelegate> {
 	BOOL loadedMetadata;
 	BOOL needsCleanupSync;
 	BOOL schedulingOperations;
@@ -25,7 +25,7 @@
 
 - (id)initWithPath:(NSString *)aLocalPath pathController:(PathController *)aPathController;
 
-@property (assign) BOOL needsCleanupSync;
+@property (nonatomic, assign) BOOL needsCleanupSync;
 
 - (void)pathOperationFinished:(PathOperation *)aPathOperation;
 

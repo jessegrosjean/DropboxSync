@@ -8,7 +8,11 @@
 
 #import "PathController.h"
 
-@interface PathController (Private)
+@interface PathController ()
+
+@property (nonatomic, retain) NSMutableDictionary* localPathsToNormalizedPaths;
+@property (nonatomic, retain) NSMutableDictionary* normalizedPathsToPathActivity;
+@property (nonatomic, retain) NSMutableDictionary* normalizedPathsToPathMetadatas;
 
 - (NSString *)serverPathToLocal:(NSString *)serverPath;
 - (NSString *)localPathToServer:(NSString *)localPath;	

@@ -43,7 +43,8 @@
 			tempUploadPath = [[fileManager tempDirectoryUnusedPath] retain];
 			if ([fileManager copyItemAtPath:localPath toPath:tempUploadPath error:&error]) {
 				[self updatePathActivity:PutPathActivity];
-                [self.client uploadFile:[serverPath lastPathComponent] toPath:[serverPath stringByDeletingLastPathComponent] withParentRev:serverMetadata.rev fromPath:tempUploadPath];
+                
+                [self.client uploadFile:[serverPath lastPathComponent] toPath:[serverPath stringByDeletingLastPathComponent] withParentRev:[self pathMetadata:YES].rev fromPath:tempUploadPath];
                 
 			} else {
 				[self finish:error];
@@ -97,6 +98,10 @@
 	}
 	
 	[self finish];
+}
+
+- (void)restClient:(DBRestClient*)client uploadFileFailedWithError:(NSError*)error {
+    [self retryWithError:error];
 }
 
 @end

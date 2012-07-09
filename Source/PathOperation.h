@@ -25,7 +25,7 @@
 	NSString *localPath;
 	DBMetadata *serverMetadata;
 	NSUInteger retriesRemaining;
-	FolderSyncPathOperation *folderSyncPathOperation;
+	id<PathControllerSyncOperationDelegate> folderSyncPathOperation;
 }
 
 + (PathOperation *)pathOperationWithPath:(NSString *)aLocalPath serverMetadata:(DBMetadata *)aServerMetadata;
@@ -40,7 +40,7 @@
 @property (nonatomic, retain) DBMetadata *serverMetadata;
 @property (readonly) PathController *pathController;
 @property (readonly) PathControllerLogLevel logLevel;
-@property (nonatomic, retain) FolderSyncPathOperation *folderSyncPathOperation;
+@property (nonatomic, retain) id<PathControllerSyncOperationDelegate> folderSyncPathOperation;
 
 - (void)log:(NSString *)aString level:(PathControllerLogLevel)level prettyFunction:(const char *)prettyFunction line:(NSUInteger)line;
 - (PathMetadata *)pathMetadata:(BOOL)createIfNeccessary;

@@ -158,13 +158,19 @@
 	DIR *dip = opendir(localPathFileSystemRepresentation);
 	struct stat fileInfo;
 	struct dirent *dit;	
-	
+	BOOL ignoreRequest = [pathController.delegate respondsToSelector:@selector(shouldSyncFile:)];
 	if (dip != NULL) {
 		while ((dit = readdir(dip)) != NULL) {
 			if (0 == strcmp(".", dit->d_name) || 0 == strcmp("..", dit->d_name))
 				continue;
 			
 			NSString *each = [[fileManager stringWithFileSystemRepresentation:dit->d_name length:dit->d_namlen] precomposedStringWithCanonicalMapping];
+            
+            // ignore files
+            if (ignoreRequest && ![pathController.delegate shouldSyncFile:each]) {
+                continue;
+            }
+            
 			NSString *eachPath = [localPath stringByAppendingPathComponent:each];
 			NSString *eachNormalizedName = [each lowercaseString];
 			
@@ -273,21 +279,31 @@
 	
 	for (NSString *each in conflictAdds) {
 		NSString *fromPath = [nameToLocalPathLookup objectForKey:each];
-		NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:[fromPath lastPathComponent]] precomposedStringWithCanonicalMapping];
-		NSString *toPath = [[fromPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:conflictName];
-		NSError *error;
-		
-		if ([fileManager moveItemAtPath:fromPath toPath:toPath error:&error]) {
-			NSString *normalizedConflictName = [conflictName normalizedDropboxPath];
-			// create path metadata?
-			[localAdds removeObject:each];
-			[usedNames addObject:conflictName];
-			[localAdds addObject:normalizedConflictName];
-			[nameToLocalPathLookup setObject:toPath forKey:normalizedConflictName];
-			[pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:fromPath, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
-		} else {
-			PathControllerLogError(@"Failed to move conflicting local add %@", error);
-		}
+        
+        BOOL isDirectory = NO;
+        if ([fileManager fileExistsAtPath:fromPath isDirectory:&isDirectory] && !isDirectory) {
+        
+            NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:[fromPath lastPathComponent]] precomposedStringWithCanonicalMapping];
+            NSString *toPath = [[fromPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:conflictName];
+            NSError *error;
+            
+            if ([fileManager moveItemAtPath:fromPath toPath:toPath error:&error]) {
+                NSString *normalizedConflictName = [conflictName normalizedDropboxPath];
+                // create path metadata?
+                [localAdds removeObject:each];
+                [usedNames addObject:conflictName];
+                [localAdds addObject:normalizedConflictName];
+                [nameToLocalPathLookup setObject:toPath forKey:normalizedConflictName];
+                [pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:fromPath, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
+            } else {
+                PathControllerLogError(@"Failed to move conflicting local add %@", error);
+            }
+        }
+        else {
+            PathControllerLogInfo(@"ignoring directory conflict %@", each);
+            [localAdds removeObject:each];
+            [serverAdds removeObject:each];
+        }
 	}
 	
 	// Schedule Local Delete Operations

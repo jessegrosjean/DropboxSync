@@ -167,7 +167,7 @@
 		if (!pathMetadata.isDeleted) {
 			if (serverMetadata) {
 				pathMetadata.lastSyncName = [localPath lastPathComponent];
-				if (updatedLastSyncHashOnFinish) {
+				if (updatedLastSyncHashOnFinish && serverMetadata.hash) {
 					pathMetadata.lastSyncHash = serverMetadata.hash;
 				}
 				pathMetadata.lastSyncDate = serverMetadata.lastModifiedDate;

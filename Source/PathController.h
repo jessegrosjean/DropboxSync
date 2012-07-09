@@ -9,7 +9,6 @@
 #import <CoreData/CoreData.h>
 #import "PathControllerDelegate.h"
 #import <DropboxSDK/DropboxSDK.h>
-
 //
 // PathController is the public API for Dropbox sync.
 // See README.markdown for general use guidelines.
@@ -41,6 +40,7 @@ enum {
 typedef NSUInteger PathControllerLogLevel;
 
 @class PathMetadata;
+@class PathOperation;
 @class PathControllerManagedObjectContext;
 
 NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
@@ -93,6 +93,7 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 #pragma mark -
 #pragma mark Path Syncing
 
+- (void)enqueueFullSync;
 - (void)enqueueFolderSyncPathRequest:(NSString *)localPath;
 - (BOOL)isSyncInProgress;
 - (void)cancelSyncInProgress;
@@ -113,6 +114,16 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 - (void)log:(NSString *)aString level:(PathControllerLogLevel)level prettyFunction:(const char *)prettyFunction line:(NSUInteger)line;
 
 @end
+
+@protocol PathControllerSyncOperationDelegate <NSObject>
+
+@property (nonatomic, retain) PathController* pathController;
+@property (nonatomic, assign) BOOL needsCleanupSync;
+
+- (void)pathOperationFinished:(PathOperation *)aPathOperation;
+
+@end
+
 
 extern NSString *BeginingFolderSyncNotification;
 extern NSString *EndingFolderSyncNotification;

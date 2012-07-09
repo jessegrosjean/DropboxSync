@@ -9,6 +9,7 @@
 #import "PathController.h"
 #import "DeleteLocalPathOperation.h"
 #import "FolderSyncPathOperation.h"
+#import "FullSyncOperation.h"
 #import "NSFileManager_Additions.h"
 #import "PathController_Private.h"
 #import "DeletePathOperation.h"
@@ -28,6 +29,10 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 @end
 
 @implementation PathController
+@synthesize localPathsToNormalizedPaths;
+@synthesize normalizedPathsToPathActivity;
+@synthesize normalizedPathsToPathMetadatas;
+
 #pragma mark -
 #pragma mark Initialization
 
@@ -66,9 +71,11 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	getOperationQueue = [[NSOperationQueue alloc] init];
 	getOperationQueue.maxConcurrentOperationCount = 6;
 	putOperationQueue = [[NSOperationQueue alloc] init];
-	putOperationQueue.maxConcurrentOperationCount = 3;
+    // cant have more than one put operation, as puting a dir, then a subdir - first errors with directory exists
+	putOperationQueue.maxConcurrentOperationCount = 1; 
 	deleteOperationQueue = [[NSOperationQueue alloc] init];
-	deleteOperationQueue.maxConcurrentOperationCount = 3;
+    // cant have more than one delete operation, as delete ordering is important.
+	deleteOperationQueue.maxConcurrentOperationCount = 1;
 	folderSyncPathOperationOperationQueue = [[NSOperationQueue alloc] init];
 	folderSyncPathOperationOperationQueue.maxConcurrentOperationCount = 1;
 
@@ -186,11 +193,24 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	BOOL isDirectory;
 	
 	if ([fileManager fileExistsAtPath:aLocalPath isDirectory:&isDirectory]) {
-		PathMetadata *pathMetadata = [self pathMetadataForLocalPath:aLocalPath createNewLocalIfNeeded:NO];
+		PathMetadata *pathMetadata = [self pathMetadataForLocalPath:aLocalPath createNewLocalIfNeeded:YES];
+        NSDate *localModified = [[fileManager attributesOfItemAtPath:aLocalPath error:error] fileModificationDate];			
+        
 		NSDate *lastSyncDate = pathMetadata.lastSyncDate;
+        
+        NSDate* lastParentSync = nil;
+        
+        // find last time sync happened on a parent directory - need to allow deletes if unsynced items are older than last sync.
+        PathMetadata* parentMetaData = pathMetadata.parent;
+        while (parentMetaData && !lastParentSync) {
+            lastParentSync = parentMetaData.lastSyncDate;
+            if (!lastParentSync) {
+                parentMetaData = parentMetaData.parent;
+            }
+        }
 		
 		if (isDirectory) {
-			if (lastSyncDate) {
+			if (lastSyncDate || [lastParentSync timeIntervalSinceDate:localModified] > 0) {
 				for (NSString *each in [fileManager contentsOfDirectoryAtPath:aLocalPath error:NULL]) {
 					[self removeUnchangedItemsAtPath:[aLocalPath stringByAppendingPathComponent:each] error:error removedAll:removedAll];
 				}
@@ -205,11 +225,10 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 			}
 		} else {
 			PathState pathState = pathMetadata.pathState;
-			NSDate *lastSyncDate = pathMetadata.lastSyncDate;
-			NSDate *localModified = [[fileManager attributesOfItemAtPath:aLocalPath error:error] fileModificationDate];			
-			BOOL isPlaceholder = (pathState == TemporaryPlaceholderPathState || pathState == PermanentPlaceholderPathState);
 			
-			if (isPlaceholder || (lastSyncDate != nil && [localModified isEqualToDate:lastSyncDate])) {
+			BOOL isPlaceholder = (pathState == TemporaryPlaceholderPathState || pathState == PermanentPlaceholderPathState);
+           
+			if (isPlaceholder || (lastSyncDate != nil && [localModified isEqualToDate:lastSyncDate]) || [lastParentSync timeIntervalSinceDate:localModified] > 0) {
 				if ([fileManager removeItemAtPath:aLocalPath error:NULL]) {
 					[self enqueuePathChangedNotification:aLocalPath changeType:RemovedPathsKey];
 					removedAllResult = YES;
@@ -300,8 +319,9 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 		values = [NSMutableSet set];
 		[pendingPathChangedNotificationUserInfo setObject:values forKey:changeTypeKey];
 	}
-	
-	[values addObject:value];
+	if (value) {
+        [values addObject:value];
+    }
 }
 
 #pragma mark -
@@ -317,6 +337,7 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	}
 }
 
+
 - (void)performFolderSyncPathRequest:(NSString *)localPath {
 	if (self.isLinked) {
 		localPath = [localPath precomposedStringWithCanonicalMapping];
@@ -324,6 +345,20 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	}
 }
 
+- (void)enqueueFullSync {
+    if (self.isLinked) {
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(performFullSync) object:nil];
+		[self performSelector:@selector(performFullSync) withObject:nil afterDelay:0];
+	}
+}
+
+
+- (void)performFullSync {
+	if (self.isLinked) {
+		[folderSyncPathOperationOperationQueue addOperation:[[[FullSyncOperation alloc] initWithPathController:self] autorelease]];
+	}
+}
 - (BOOL)saveState {
 	NSError *error;
 	if (![managedObjectContext save:&error]) {

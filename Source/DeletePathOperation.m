@@ -27,7 +27,13 @@
 }
 
 - (void)restClient:(DBRestClient*)aClient deletePathFailedWithError:(NSError*)error {
-	[self retryWithError:error];
+    if (error.code == 404) { // does not exist already
+        [self.pathController deletePathMetadataForLocalPath:localPath];
+        self.createPathMetadataOnFinish = NO;
+    }
+    else {
+        [self retryWithError:error];
+    }
 }
 
 @end
