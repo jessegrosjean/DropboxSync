@@ -282,21 +282,31 @@
         
         BOOL isDirectory = NO;
         if ([fileManager fileExistsAtPath:fromPath isDirectory:&isDirectory] && !isDirectory) {
-        
-            NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:[fromPath lastPathComponent]] precomposedStringWithCanonicalMapping];
-            NSString *toPath = [[fromPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:conflictName];
-            NSError *error;
+
+            PathControllerConflictResolutionType conflictResolutionType = [pathController conflictResolutionTypeForLocalPath:fromPath];
             
-            if ([fileManager moveItemAtPath:fromPath toPath:toPath error:&error]) {
-                NSString *normalizedConflictName = [conflictName normalizedDropboxPath];
-                // create path metadata?
+            if (conflictResolutionType == PathConflictResolutionDuplicateLocal) {
+                NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:[fromPath lastPathComponent]] precomposedStringWithCanonicalMapping];
+                NSString *toPath = [[fromPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:conflictName];
+                NSError *error;
+                
+                if ([fileManager moveItemAtPath:fromPath toPath:toPath error:&error]) {
+                    NSString *normalizedConflictName = [conflictName normalizedDropboxPath];
+                    // create path metadata?
+                    [localAdds removeObject:each];
+                    [usedNames addObject:conflictName];
+                    [localAdds addObject:normalizedConflictName];
+                    [nameToLocalPathLookup setObject:toPath forKey:normalizedConflictName];
+                    [pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:fromPath, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
+                } else {
+                    PathControllerLogError(@"Failed to move conflicting local add %@", error);
+                }
+            }
+            else if (conflictResolutionType == PathConflictResolutionLocal) {
+                [serverAdds removeObject:each];
+            }
+            else if (conflictResolutionType == PathConflictResolutionServer) {
                 [localAdds removeObject:each];
-                [usedNames addObject:conflictName];
-                [localAdds addObject:normalizedConflictName];
-                [nameToLocalPathLookup setObject:toPath forKey:normalizedConflictName];
-                [pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:fromPath, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
-            } else {
-                PathControllerLogError(@"Failed to move conflicting local add %@", error);
             }
         }
         else {

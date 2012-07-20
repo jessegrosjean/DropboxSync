@@ -18,6 +18,8 @@
 - (NSString *)localPathToServer:(NSString *)localPath;	
 - (NSString *)localPathToNormalized:(NSString *)localPath;
 
+- (PathControllerConflictResolutionType) conflictResolutionTypeForLocalPath:(NSString*) path;
+
 - (BOOL)saveState;
 - (void)setPathActivity:(PathActivity)aPathActivity forPath:(NSString *)aLocalPath;
 - (PathMetadata *)pathMetadataForLocalPath:(NSString *)localPath createNewLocalIfNeeded:(BOOL)createIfNeeded;

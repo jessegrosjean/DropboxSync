@@ -562,6 +562,14 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 	// localPathsToPathActivity
 }
 
+- (PathControllerConflictResolutionType) conflictResolutionTypeForLocalPath:(NSString*) path {
+    if ([delegate respondsToSelector:@selector(conflictResolutionTypeForLocalPath:)]) {
+        return [delegate conflictResolutionTypeForLocalPath:path];
+    }
+    else {
+        return PathConflictResolutionDuplicateLocal;
+    }
+}
 
 @end
 
@@ -569,8 +577,12 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 @synthesize pathController;
 @end
 
-NSString *BeginingFolderSyncNotification = @"BeginingFolderSyncNotification";
-NSString *EndingFolderSyncNotification = @"EndingFolderSyncNotification";
+NSString *BeginingFolderSyncNotification    = @"BeginingFolderSyncNotification";
+NSString *EndingFolderSyncNotification      = @"EndingFolderSyncNotification";
+NSString *BeginingFullSyncNotification      = @"BeginingFullSyncNotification";
+NSString *EndingFullSyncNotification        = @"EndingFullSyncNotification";
+
+
 
 NSString *PathsChangedNotification = @"PathsChangedNotification";
 NSString *MovedPathsKey = @"MovedPathsKey";

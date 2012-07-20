@@ -37,6 +37,8 @@ enum {
 	PathControllerLogLevelWarn,
 	PathControllerLogLevelError
 };
+
+
 typedef NSUInteger PathControllerLogLevel;
 
 @class PathMetadata;
@@ -127,6 +129,10 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context);
 
 extern NSString *BeginingFolderSyncNotification;
 extern NSString *EndingFolderSyncNotification;
+extern NSString *BeginingFullSyncNotification;
+extern NSString *EndingFullSyncNotification;
+
+
 
 // Path notifications
 extern NSString *PathsChangedNotification;

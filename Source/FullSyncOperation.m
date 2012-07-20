@@ -72,7 +72,7 @@
         return;
     }
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:BeginingFolderSyncNotification object:pathController];
+	[[NSNotificationCenter defaultCenter] postNotificationName:BeginingFullSyncNotification object:pathController];
 	
 	[super start];
 }
@@ -97,8 +97,11 @@
 	[super finish:error];
     if (!error) {
         [[NSUserDefaults standardUserDefaults] setObject:self.cursor forKey:@"DropboxSDKDeltaCursor"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EndingFullSyncNotification object:aPathController];
     }
-	[[NSNotificationCenter defaultCenter] postNotificationName:EndingFolderSyncNotification object:aPathController];
+    else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:EndingFullSyncNotification object:aPathController userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+    }
 }
 
 - (void)finishIfSyncOperationsAreFinished {
@@ -249,33 +252,53 @@
     }
     
     NSMutableSet *conflictAdds = [serverAdds setIntersectingSet:localAdds];
+    [conflictAdds unionSet:[serverModified setIntersectingSet:localModified]];
     
    
    	for (NSString *each in conflictAdds) {
            BOOL isDirectory = NO;
            NSString* path = [normalizedToPathLookup objectForKey:each];
            if ([fileManager fileExistsAtPath:path isDirectory:&isDirectory] && !isDirectory) {
+               PathControllerConflictResolutionType conflictResolutionType = [pathController conflictResolutionTypeForLocalPath:path];
                
-               NSString* name = [path lastPathComponent];
-               NSString* parentPath = [path stringByDeletingLastPathComponent];
-               NSSet* usedNames = [NSSet setWithArray:[fileManager contentsOfDirectoryAtPath:parentPath error:&error]];
-               
-               NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:name] precomposedStringWithCanonicalMapping];
-               NSString *toPath = [parentPath stringByAppendingPathComponent:conflictName];
-               
-               if ([fileManager moveItemAtPath:path toPath:toPath error:&error]) {
-                   NSString *normalizedConflictPath = [toPath normalizedDropboxPath];
-                   // create path metadata?
+               if (conflictResolutionType == PathConflictResolutionDuplicateLocal) {
+                   
+                   NSString* name = [path lastPathComponent];
+                   NSString* parentPath = [path stringByDeletingLastPathComponent];
+                   NSSet* usedNames = [NSSet setWithArray:[fileManager contentsOfDirectoryAtPath:parentPath error:&error]];
+                   
+                   NSString *conflictName = [[usedNames conflictNameForNameInNormalizedSet:name] precomposedStringWithCanonicalMapping];
+                   NSString *toPath = [parentPath stringByAppendingPathComponent:conflictName];
+                   
+                   if ([fileManager moveItemAtPath:path toPath:toPath error:&error]) {
+                       NSString *normalizedConflictPath = [toPath normalizedDropboxPath];
+                       // create path metadata?
+                       [localAdds removeObject:each];
+                       [localAdds addObject:normalizedConflictPath];
+                       [normalizedToPathLookup setObject:toPath forKey:normalizedConflictPath];
+                       [pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:path, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
+                   } else {
+                       PathControllerLogError(@"Failed to move conflicting local add %@", error);
+                   }
+               }
+               else if (conflictResolutionType == PathConflictResolutionLocal) {
+                   PathMetadata* pathMetadata = [pathController pathMetadataForLocalPath:path createNewLocalIfNeeded:NO];
+                   DBMetadata* dbMetadata = [pathToDBMetadataLookup objectForKey:each];
+                   pathMetadata.lastSyncHash = dbMetadata.rev;
+                   
+                   [serverAdds removeObject:each];
+                   [serverModified removeObject:each];
+               }
+               else if (conflictResolutionType == PathConflictResolutionServer) {
+                   PathMetadata* pathMetadata = [pathController pathMetadataForLocalPath:path createNewLocalIfNeeded:NO];
+                   pathMetadata.lastSyncDate = [[fileManager attributesOfItemAtPath:path error:nil] fileModificationDate];
+                   
                    [localAdds removeObject:each];
-                   [localAdds addObject:normalizedConflictPath];
-                   [normalizedToPathLookup setObject:toPath forKey:normalizedConflictPath];
-                   [pathController enqueuePathChangedNotification:[NSDictionary dictionaryWithObjectsAndKeys:path, FromPathKey, toPath, ToPathKey, nil] changeType:MovedPathsKey];
-               } else {
-                   PathControllerLogError(@"Failed to move conflicting local add %@", error);
+                   [localModified removeObject:each];
                }
            }
            else {
-               PathControllerLogInfo(@"ignoring directory conflict %@", each);
+               PathControllerLogDebug(@"ignoring directory conflict %@", each);
                [localAdds removeObject:each];
                [serverAdds removeObject:each];
            }
