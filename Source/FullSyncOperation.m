@@ -177,7 +177,12 @@
         NSNumber* isDir = nil;
         [url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:&error];
     
+        
+        
         NSString* theLocalPath = [url path];
+        if ([theLocalPath hasPrefix:@"/private"]) {
+            theLocalPath = [theLocalPath substringFromIndex:8];
+        }
         NSString* path = [pathController localPathToNormalized:theLocalPath];
         NSString* normalizedPath = [path normalizedDropboxPath];
         
