@@ -152,11 +152,8 @@
     
     // find all local files and check if changed
     NSError* error = nil;
-    NSDirectoryEnumerator* dirEnumerator = [fileManager enumeratorAtURL:[NSURL fileURLWithPath:localPath]  
-                                             includingPropertiesForKeys:nil 
-                                                                options:0 
-                                            errorHandler:nil];
     
+    NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:localPath];
     
     // find all localy modified and added
     NSMutableSet* localAdds = [NSMutableSet set];
@@ -167,22 +164,18 @@
     NSMutableDictionary* normalizedToPathLookup = [NSMutableDictionary dictionary];
     
     BOOL ignoreRequest = [pathController.delegate respondsToSelector:@selector(shouldSyncFile:)];
-    for (NSURL* url in dirEnumerator) {
-        NSString* name = nil;
+    for (NSString * relativePath in dirEnumerator) {
 
-        [url getResourceValue:&name forKey:NSURLNameKey error:&error];
+        NSString* name = [relativePath lastPathComponent];
+        
+        NSDictionary* attrs = [dirEnumerator fileAttributes];
         
         if (ignoreRequest && ![pathController.delegate shouldSyncFile:name]) continue;
         
-        NSNumber* isDir = nil;
-        [url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:&error];
-    
+        BOOL isDir = ([attrs fileType] == NSFileTypeDirectory);
         
+        NSString* theLocalPath = [localPath stringByAppendingPathComponent:relativePath];
         
-        NSString* theLocalPath = [url path];
-        if ([theLocalPath hasPrefix:@"/private"]) {
-            theLocalPath = [theLocalPath substringFromIndex:8];
-        }
         NSString* path = [pathController localPathToNormalized:theLocalPath];
         NSString* normalizedPath = [path normalizedDropboxPath];
         
@@ -193,12 +186,11 @@
             [localAdds addObject:normalizedPath];
         }
         else {
-            NSDate* modDate = nil;
-            [url getResourceValue:&modDate forKey:NSURLContentModificationDateKey error:&error];
+            NSDate* modDate = [attrs fileModificationDate];
             
             if (![modDate isEqualToDate:[pathMetadata lastSyncDate]]) {
         
-                if ([isDir boolValue]) {
+                if (isDir) {
                     pathMetadata.lastSyncDate = modDate; 
                 }
                 else {
@@ -375,6 +367,7 @@
     operationCount += [gets count];
     operationCount += [puts count];
 	[self finishIfSyncOperationsAreFinished];
+
 }
 
 #pragma mark -
