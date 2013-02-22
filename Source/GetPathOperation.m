@@ -114,18 +114,27 @@
 		if ([self pathMetadata:YES].pathState != TemporaryPlaceholderPathState) {
 			NSDate *localModifiedDate = [[fileManager attributesOfItemAtPath:localPath error:nil] valueForKey:NSFileModificationDate];
 			
-			if (localModifiedDate == nil || ![localModifiedDate isEqualToDate:[self pathMetadata:YES].lastSyncDate]) {                
-				// Conflict, new download doesn't match local version (local must have changed) so create a conflict.
-				NSString *conflictPath = [fileManager conflictPathForPath:localPath error:&error];
+			if (localModifiedDate == nil || ![localModifiedDate isEqualToDate:[self pathMetadata:YES].lastSyncDate]) {
+                
+                PathControllerConflictResolutionType conflictResolutionType = [[self pathController] conflictResolutionTypeForLocalPath:localPath];
+                
+                if (conflictResolutionType == PathConflictResolutionDuplicateLocal) {
+                    // Conflict, new download doesn't match local version (local must have changed) so create a conflict.
+                    NSString *conflictPath = [fileManager conflictPathForPath:localPath error:&error];
 				
-				if (!conflictPath) {
-					[self finish:error];
-					return;
-				} else {
-					if (![self.pathController moveItemAtPath:localPath toPath:conflictPath error:&error]) {
-						[self finish:error];
-					}
-				}
+                    if (!conflictPath) {
+                        [self finish:error];
+                        return;
+                    } else {
+                        if (![self.pathController moveItemAtPath:localPath toPath:conflictPath error:&error]) {
+                            [self finish:error];
+                        }
+                    }
+                }
+                else if (conflictResolutionType == PathConflictResolutionLocal) {
+                    [self finish:nil];  // just keep the local file
+                }
+                // else just copy the server file over
 			}
 			
 			/*

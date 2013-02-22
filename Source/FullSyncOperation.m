@@ -20,7 +20,7 @@
 #include <dirent.h>
 #import <DropboxSDK/DBDeltaEntry.h>
 
-@interface PathController (FullSyncOperationPrivate)
+@interface PathController (PathOperationPrivate)
 - (NSOperationQueue *)getOperationQueue;
 - (NSOperationQueue *)putOperationQueue;
 - (NSOperationQueue *)deleteOperationQueue;
@@ -397,26 +397,6 @@
     [self retryWithError:error];
 }
 
-
-@end
-
-@implementation PathController (FolderSyncPathOperationPrivate)
-
-- (NSOperationQueue *)getOperationQueue {
-	return getOperationQueue;
-}
-
-- (NSOperationQueue *)putOperationQueue {
-	return putOperationQueue;
-}
-
-- (NSOperationQueue *)deleteOperationQueue {
-	return deleteOperationQueue;
-}
-
-- (NSOperationQueue *)folderSyncPathOperationOperationQueue {
-	return folderSyncPathOperationOperationQueue;
-}
 
 @end
 

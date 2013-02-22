@@ -20,7 +20,7 @@
 #include <dirent.h>
 
 
-@interface PathController (FolderSyncPathOperationPrivate)
+@interface PathController (PathOperationPrivate)
 - (NSOperationQueue *)getOperationQueue;
 - (NSOperationQueue *)putOperationQueue;
 - (NSOperationQueue *)deleteOperationQueue;
@@ -439,7 +439,7 @@
 
 @end
 
-@implementation PathController (FolderSyncPathOperationPrivate)
+@implementation PathController (PathOperationPrivate)
 
 - (NSOperationQueue *)getOperationQueue {
 	return getOperationQueue;
