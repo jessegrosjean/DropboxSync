@@ -13,6 +13,10 @@
 		01D635DA159E0A6600E49063 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D635D9159E0A6600E49063 /* DropboxSDK.framework */; };
 		01D635DB159E0A6600E49063 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D635D9159E0A6600E49063 /* DropboxSDK.framework */; };
 		01D635DD159E0ABF00E49063 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D635DC159E0ABF00E49063 /* QuartzCore.framework */; };
+		01E6596816DE28520085D3A3 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E6596716DE28520085D3A3 /* CoreFoundation.framework */; };
+		01E6596E16DE28520085D3A3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01E6596C16DE28520085D3A3 /* InfoPlist.strings */; };
+		01E6597316DE28BA0085D3A3 /* PathMetadata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8827CADA132573FF00B27E1B /* PathMetadata.xcdatamodeld */; };
+		01E6597E16DE29D20085D3A3 /* FullSyncOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0164C9C215A5821E00A98508 /* FullSyncOperation.m */; };
 		8827CA5A132571FA00B27E1B /* GHUnitIPhoneTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 8827CA57132571FA00B27E1B /* GHUnitIPhoneTestMain.m */; };
 		8827CA5B132571FA00B27E1B /* PathControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8827CA59132571FA00B27E1B /* PathControllerTests.m */; };
 		8827CA601325727400B27E1B /* GHUnitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8827CA5F1325727400B27E1B /* GHUnitIOS.framework */; };
@@ -80,6 +84,11 @@
 		01D635D6159E082000E49063 /* NHUnitIPhoneAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NHUnitIPhoneAppDelegate.m; sourceTree = "<group>"; };
 		01D635D9159E0A6600E49063 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		01D635DC159E0ABF00E49063 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		01E6596616DE28520085D3A3 /* DropboxSyncResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropboxSyncResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		01E6596716DE28520085D3A3 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		01E6596B16DE28520085D3A3 /* DropboxSyncResources-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DropboxSyncResources-Info.plist"; sourceTree = "<group>"; };
+		01E6596D16DE28520085D3A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		01E6596F16DE28520085D3A3 /* DropboxSyncResources-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DropboxSyncResources-Prefix.pch"; sourceTree = "<group>"; };
 		8827C8D4132558FA00B27E1B /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		8827CA57132571FA00B27E1B /* GHUnitIPhoneTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GHUnitIPhoneTestMain.m; path = Tests/GHUnitIPhoneTestMain.m; sourceTree = "<group>"; };
 		8827CA58132571FA00B27E1B /* PathControllerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PathControllerTests.h; path = Tests/PathControllerTests.h; sourceTree = "<group>"; };
@@ -125,6 +134,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		01E6596316DE28520085D3A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01E6596816DE28520085D3A3 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5ACA5AB1320D0F5000502D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -166,11 +183,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01E6596916DE28520085D3A3 /* DropboxSyncResources */ = {
+			isa = PBXGroup;
+			children = (
+				01E6596A16DE28520085D3A3 /* Supporting Files */,
+			);
+			path = DropboxSyncResources;
+			sourceTree = "<group>";
+		};
+		01E6596A16DE28520085D3A3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				01E6596B16DE28520085D3A3 /* DropboxSyncResources-Info.plist */,
+				01E6596C16DE28520085D3A3 /* InfoPlist.strings */,
+				01E6596F16DE28520085D3A3 /* DropboxSyncResources-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				D2AAC07E0554694100DB518D /* libDropboxSync.a */,
 				C5ACA5AD1320D0F5000502D1 /* Tests.app */,
+				01E6596616DE28520085D3A3 /* DropboxSyncResources.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,6 +220,7 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				8827C80A1325375900B27E1B /* Tests */,
 				C592A09113222205002CA1B4 /* Resources */,
+				01E6596916DE28520085D3A3 /* DropboxSyncResources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -205,6 +242,7 @@
 				C5ACA7C11320D431000502D1 /* SystemConfiguration.framework */,
 				C5ACA7611320D39B000502D1 /* CoreData.framework */,
 				C5ACA7621320D39B000502D1 /* Security.framework */,
+				01E6596716DE28520085D3A3 /* CoreFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -320,6 +358,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		01E6596516DE28520085D3A3 /* DropboxSyncResources */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01E6597216DE28520085D3A3 /* Build configuration list for PBXNativeTarget "DropboxSyncResources" */;
+			buildPhases = (
+				01E6596216DE28520085D3A3 /* Sources */,
+				01E6596316DE28520085D3A3 /* Frameworks */,
+				01E6596416DE28520085D3A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DropboxSyncResources;
+			productName = DropboxSyncResources;
+			productReference = 01E6596616DE28520085D3A3 /* DropboxSyncResources.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 		C5ACA5AC1320D0F5000502D1 /* Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5ACA5B21320D113000502D1 /* Build configuration list for PBXNativeTarget "Tests" */;
@@ -372,6 +427,7 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* DropboxLib */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -380,11 +436,20 @@
 			targets = (
 				D2AAC07D0554694100DB518D /* DropboxSync */,
 				C5ACA5AC1320D0F5000502D1 /* Tests */,
+				01E6596516DE28520085D3A3 /* DropboxSyncResources */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		01E6596416DE28520085D3A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01E6596E16DE28520085D3A3 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5ACA5A91320D0F5000502D1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -395,6 +460,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		01E6596216DE28520085D3A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01E6597316DE28BA0085D3A3 /* PathMetadata.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5ACA5AA1320D0F5000502D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -413,6 +486,7 @@
 				8827CABF1325737900B27E1B /* PutPathOperation.m in Sources */,
 				8827CADC132573FF00B27E1B /* PathMetadata.xcdatamodeld in Sources */,
 				01D635D7159E082000E49063 /* NHUnitIPhoneAppDelegate.m in Sources */,
+				01E6597E16DE29D20085D3A3 /* FullSyncOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,15 +511,95 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		01E6596C16DE28520085D3A3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01E6596D16DE28520085D3A3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
-		1DEB921F08733DC00010E9CD /* Debug */ = {
+		01E6597016DE28520085D3A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
-					armv6,
+					armv7s,
 					armv7,
 				);
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DropboxSyncResources/DropboxSyncResources-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "DropboxSyncResources/DropboxSyncResources-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		01E6597116DE28520085D3A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv7s,
+					armv7,
+				);
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DropboxSyncResources/DropboxSyncResources-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "DropboxSyncResources/DropboxSyncResources-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/DropboxSync.dst;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -468,10 +622,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/DropboxSync.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -574,6 +725,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		01E6597216DE28520085D3A3 /* Build configuration list for PBXNativeTarget "DropboxSyncResources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01E6597016DE28520085D3A3 /* Debug */,
+				01E6597116DE28520085D3A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "DropboxSync" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

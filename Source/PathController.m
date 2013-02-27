@@ -415,7 +415,8 @@ NSInteger sortInPathOrder(NSString *a, NSString *b, void* context) {
 
 - (void)initManagedObjectContext {
 	NSError *error;
-	NSURL *modelURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"PathMetadata" ofType:@"momd"]];
+    NSBundle* dropboxBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"DropboxSyncResources" withExtension:@"bundle"]];
+	NSURL *modelURL = [NSURL fileURLWithPath:[dropboxBundle pathForResource:@"PathMetadata" ofType:@"momd"]];
 	NSURL *storeURL = [NSURL fileURLWithPath:pathMetadataStorePath];
 	managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];    
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
